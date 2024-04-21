@@ -17,20 +17,42 @@ new function (){
 
             this.terminalPanel.terminalPromptTextBox.addEventListener("input",this.inputChange)
             this.terminalPanel.terminalPromptTextBox.addEventListener("keydown",this.keyDown)
+            
+
+            window.onerror = this.onError;
+            
         }
+
+
+        onError(message, source, lineno, colno, error) {
+            // Log error message to console
+            console.error("Custom Error Handler Triggered:");
+            console.error("Error Message: " + message);
+            console.error("Source: " + source);
+            console.error("Line Number: " + lineno);
+            console.error("Column Number: " + colno);
+            console.log(this);
+
+            // Check if error object is present
+            if (error) {
+                console.error("Error Object: ", error);
+            }
+
+            // Additionally, you can check the type of error and log additional information accordingly
+            if (error instanceof Error) {
+                console.error("Error Stack: ", error.stack);
+            }
+        };
+
         keyDown(event){
-            console.log(event)
-            console.log(this)
             if(event.key == "Enter" && event.shiftKey == false){
                 terminal.shouldClearText = true;
             }
         }
         inputChange(event){
-            console.log(event)
-            console.log(this)
-            console.log(this.value)
             if(terminal.shouldClearText){
                 terminal.shouldClearText = false;
+                terminal.runCommand(this.value)
                 this.value = "";
             }
 
@@ -49,6 +71,18 @@ new function (){
             }
             this.style = `height:${height}; overflow-y:${overflowy};`
         }
+        runCommand(command){
+            this.log(eval(command))
+            try {
+                this.log(eval(command))
+            } catch (error) {
+                this.log(error)
+            }
+        }
+        error(event){
+
+        }
+
         log(out){
             console.log(out)
         }
